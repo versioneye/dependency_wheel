@@ -5,3 +5,8 @@ This is a fork from the MooWheel Class version 0.2 from unwieldy studios <http:/
    
 This fork is customized to visualize dependencies for software libraries. 
 It is used on <https://www.versioneye.com> to show recursive dependencies for Java and Ruby Projects. 
+
+
+License
+==
+MIT License <http://www.opensource.org/licenses/MIT>
