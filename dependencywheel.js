@@ -367,6 +367,21 @@ var DependencyWheel = new Class({
       }
    },
 
+    /**
+     * Creates gradient for connection
+     *
+     * @param ctx convas context
+     * @param {Object} connectionRect Configuration of dots to be connected
+     * @param connectionRect.x1 x-coordinate of start point
+     * @param connectionRect.y1 y-coordinate of start point
+     * @param connectionRect.c1 color of start point
+     * @param connectionRect.x2 x-coordinate of end point
+     * @param connectionRect.y2 y-coordinate of end point
+     * @param connectionRect.c2 color of end point
+     *
+     * @returns {*|CanvasGradient}
+     */
+
     getStrokeGradient: function( ctx, connectionRect ) {
         var grad = ctx.createLinearGradient( connectionRect.x1, connectionRect.y1, connectionRect.x2, connectionRect.y2 );
 
@@ -433,7 +448,7 @@ var DependencyWheel = new Class({
 
          $(this.hoverCanvas).addEvent('click', function(e) {
             // if (!this.lastMouseOver) return false;
-            this.options.onItemClick(this.data[this.lastMouseOver], e);
+            //this.options.onItemClick(this.data[this.lastMouseOver], e);
          }.bind(this));
       }
    },
