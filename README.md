@@ -55,6 +55,41 @@ And a little bit JavaScript.
 </script>
 ```
 
+The server resource has to deliver a JSON string with this structure: 
+
+```JSON
+[
+  {
+    connections: [
+      "id_to_another_node_1"
+      "id_to_another_node_1"
+      ]
+    text: "Label text of this node"
+    id: "id_of_this_node"
+    version: "version string"
+  }
+]
+```
+
+Here is a short example:
+
+```JSON
+[
+  {
+    connections: [ "node_2" ]
+    text: "node_1"
+    id: "node_1"
+    version: "1.0.0"
+  },
+  {
+    connections: [ "node_1" ]
+    text: "node_2"
+    id: "node_2"
+    version: "1.0.0"
+  }
+]
+```
+
 License
 ==
 MIT License <http://www.opensource.org/licenses/MIT>
