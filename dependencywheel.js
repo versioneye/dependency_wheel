@@ -324,8 +324,8 @@ var DependencyWheel = new Class({
       for(var j = 0; j < connections.length; j++) {
          var itemIdx = this.getItemIdxById(connections[j]);
 
-         cx.strokeStyle = hover ? (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]).replace(/, \d\.?\d+?\)/, ',1)') :
-                                  (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]);
+//         cx.strokeStyle = hover ? (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]).replace(/, \d\.?\d+?\)/, ',1)') :
+//                                  (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]);
 
          cx.beginPath();
          cx.moveTo(x, y);
@@ -336,6 +336,14 @@ var DependencyWheel = new Class({
          cp1y = this.options.center.y + Math.sin(angle * (Math.PI / 180)) * (this.radius / 1.5);
          cp2x = this.options.center.x + Math.cos(rpos * (Math.PI / 180)) * (this.radius / 1.5);
          cp2y = this.options.center.y + Math.sin(rpos * (Math.PI / 180)) * (this.radius / 1.5);
+
+          var stopItem = this.data[ itemIdx ];
+          cx.strokeStyle = this.getStrokeGradient( cx, { x1: x, y1: y, c1: item[ 'colors' ][ '__default' ], x2: x2, y2: y2, c2: stopItem[ 'colors' ][ '__default' ] } );
+
+          cx.beginPath();
+          cx.moveTo(x, y);
+
+
          cx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2);
          cx.stroke();
          cx.closePath();
@@ -358,6 +366,14 @@ var DependencyWheel = new Class({
         show_info_box(this.data, this.options);
       }
    },
+
+    getStrokeGradient: function( ctx, connectionRect ) {
+        var grad = ctx.createLinearGradient( connectionRect.x1, connectionRect.y1, connectionRect.x2, connectionRect.y2 );
+
+        grad.addColorStop(0, connectionRect.c1 );
+        grad.addColorStop(1, connectionRect.c2);
+        return grad;
+    },
    
    // draw the entire DependencyWheel
    draw: function() {
