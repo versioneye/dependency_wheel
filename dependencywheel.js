@@ -324,6 +324,10 @@ var DependencyWheel = new Class({
       for(var j = 0; j < connections.length; j++) {
          var itemIdx = this.getItemIdxById(connections[j]);
 
+          var connectionName = connections[ j ];
+
+          var isDependency = !!( item[ 'dependencies' ] && item[ 'dependencies' ].indexOf( connectionName ) != -1 );
+
 //         cx.strokeStyle = hover ? (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]).replace(/, \d\.?\d+?\)/, ',1)') :
 //                                  (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]);
 
@@ -338,7 +342,16 @@ var DependencyWheel = new Class({
          cp2y = this.options.center.y + Math.sin(rpos * (Math.PI / 180)) * (this.radius / 1.5);
 
           var stopItem = this.data[ itemIdx ];
-          cx.strokeStyle = this.getStrokeGradient( cx, { x1: x, y1: y, c1: item[ 'colors' ][ '__default' ], x2: x2, y2: y2, c2: stopItem[ 'colors' ][ '__default' ] } );
+
+          cx.strokeStyle = hover ?
+              this.getStrokeGradient(
+                  cx,
+                  { x1: x, y1: y, c1: item[ 'colors' ][ '__default' ], x2: x2, y2: y2, c2: stopItem[ 'colors' ][ '__default' ] },
+                  isDependency
+              ) :
+                                  (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]);
+
+          //    cx.strokeStyle = this.getStrokeGradient( cx, { x1: x, y1: y, c1: item[ 'colors' ][ '__default' ], x2: x2, y2: y2, c2: stopItem[ 'colors' ][ '__default' ] } );
 
           cx.beginPath();
           cx.moveTo(x, y);
@@ -378,15 +391,22 @@ var DependencyWheel = new Class({
      * @param connectionRect.x2 x-coordinate of end point
      * @param connectionRect.y2 y-coordinate of end point
      * @param connectionRect.c2 color of end point
+     * @param {Boolean} isDependency
      *
      * @returns {*|CanvasGradient}
      */
-
-    getStrokeGradient: function( ctx, connectionRect ) {
+    getStrokeGradient: function( ctx, connectionRect, isDependency ) {
         var grad = ctx.createLinearGradient( connectionRect.x1, connectionRect.y1, connectionRect.x2, connectionRect.y2 );
 
-        grad.addColorStop(0, connectionRect.c1 );
-        grad.addColorStop(1, connectionRect.c2);
+        if ( isDependency ) {
+            grad.addColorStop(0, 'rgba(0,0,127,0.5)');
+            grad.addColorStop(1, 'rgba(0,0,127,1)');
+        }
+        else {
+            grad.addColorStop(0, 'rgba(0,127,0,0.5)' );//connectionRect.c1 );
+            grad.addColorStop(1, 'rgba(0,127,0,1)' );//connectionRect.c2);
+        }
+
         return grad;
     },
    
@@ -427,7 +447,7 @@ var DependencyWheel = new Class({
             if(conn !== false) {
                if(this.lastMouseOver == conn)
                   return;
-                   
+
                this.drawConnection(conn, true);
 
                this.lastMouseOver = conn;
