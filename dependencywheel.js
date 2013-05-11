@@ -160,7 +160,7 @@ var DependencyWheel = new Class({
          
          if (this.options.lines.color == 'random'){
             p1 = 100;
-            p2 = 20;
+            p2 = 100;
             color['__default'] = "rgba(" + (Math.floor(Math.random() * p1) + p2) + "," + (Math.floor(Math.random() * p1) + p2) + "," + (Math.floor(Math.random() * p1) + p2) + ", 1)";
          } else{
             color['__default'] = this.options.lines.color;
