@@ -460,10 +460,12 @@ DependencyWheel.Remote = new Class({
               options.width = wheelData.length * options.resize_factor;
               options.height = wheelData.length * options.resize_factor;
               element_ids = options.resize_ids.split(",");
-              for (z = 0; z < element_ids.length; z++){
-                element = document.getElementById(element_ids[z]);
-                new_width = options.width + (z * 20);
-                element.style.width = new_width + "px";
+              for (element_count = 0; element_count < element_ids.length; element_count++){
+                element = document.getElementById(element_ids[element_count]);
+                new_width = options.width + (element_count * 20);
+                if (element.offsetWidth < new_width){
+                  element.style.width = new_width + "px";
+                }
               }
             }
             
