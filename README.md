@@ -90,6 +90,8 @@ Here is a short example:
 ]
 ```
 
+The example above will render 2 nodes who are connected with each other. 
+
 License
 ==
 MIT License <http://www.opensource.org/licenses/MIT>
