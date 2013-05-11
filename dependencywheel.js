@@ -34,6 +34,7 @@ var DependencyWheel = new Class({
       onItemClick: $empty,
       infoBox: 'mooinfo', 
       infoNumber: 'moonumber', 
+      scope: "compile", 
       data_border: 70,
       canvas_id: 'canvas', 
       canvas_hover_id: 'canvas_hover',       
@@ -41,7 +42,6 @@ var DependencyWheel = new Class({
       resize: false,
       resize_ids: "container,section", 
       resize_factor: 11, 
-      scope: "compile", 
       container_id: "canvas-container"
     },
    
@@ -524,14 +524,26 @@ function show_info_box(data, options){
   number_name = options.infoNumber;
   recursive_deps = data.length;
   options.data_length = data.length;
+  
   info_box = document.getElementById(box_name);
-  info_number = document.getElementById(number_name);
   if (info_box){
-    info_box.style.display = "block";
+    info_box.style.display = "inline-block";
   }
+
+  info_number = document.getElementById(number_name);
   if (info_number){
-    var txt = document.createTextNode(recursive_deps);
-    info_number.appendChild(txt); 
+    info_number.innerHTML = recursive_deps;
   }
-  handle_path(options);
+
+  scope_name = document.getElementById("scope_name");
+  if (scope_name){
+    if (options.scope == "all"){
+      scope_name.innerHTML = "";  
+    } else {
+      scope_name.innerHTML = options.scope;  
+    }
+  }
+  if (typeof(handle_path) == 'function'){
+    handle_path(options);  
+  }
 }
