@@ -29,7 +29,7 @@ var DependencyWheel = new Class({
       hover: true,
       hoverLines: {
          color: 'rgba(255,255,255,255)',
-         lineWidth: 5
+         lineWidth: 6
       },
       onItemClick: $empty,
       infoBox: 'mooinfo', 
@@ -350,7 +350,7 @@ var DependencyWheel = new Class({
                   isDependency
               ) :
                                   (item['colors'][connections[j][0]] ? item['colors'][connections[j][0]] : item['colors']["__default"]);
-
+          cx.lineCap = 'round';
           //    cx.strokeStyle = this.getStrokeGradient( cx, { x1: x, y1: y, c1: item[ 'colors' ][ '__default' ], x2: x2, y2: y2, c2: stopItem[ 'colors' ][ '__default' ] } );
 
           cx.beginPath();
