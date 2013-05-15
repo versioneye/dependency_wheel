@@ -353,10 +353,6 @@ var DependencyWheel = new Class({
           cx.lineCap = 'round';
           //    cx.strokeStyle = this.getStrokeGradient( cx, { x1: x, y1: y, c1: item[ 'colors' ][ '__default' ], x2: x2, y2: y2, c2: stopItem[ 'colors' ][ '__default' ] } );
 
-          cx.beginPath();
-          cx.moveTo(x, y);
-
-
          cx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x2, y2);
          cx.stroke();
          cx.closePath();
