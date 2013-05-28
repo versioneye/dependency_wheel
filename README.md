@@ -29,18 +29,20 @@ And a little bit JavaScript.
   function render_wheel(){
     canvas_container = document.getElementById("canvas-container")
     if (canvas_container){
-      var wheel = new DependencyWheel.Remote(false, canvas_container, {
-        url: 'YOUR_RESOURCE_RETURNING_JSON.json',
-        width: "605",
-        height: "605",
-        infoBox: "infoBox",
-        canvas_id: "canvas",
-        canvas_hover_id: "canvas_hover",
-        onItemClick: function(item, event){
-          window.location.href = "YOUR_NEW_RESOURCE";
-        }
-      } );
+      alert("Canvas element is missing!")
+      return ;
     }
+    var wheel = new DependencyWheel.Remote(false, canvas_container, {
+      url: 'YOUR_RESOURCE_RETURNING_JSON.json',
+      width: "605",
+      height: "605",
+      infoBox: "infoBox",
+      canvas_id: "canvas",
+      canvas_hover_id: "canvas_hover",
+      onItemClick: function(item, event){
+        window.location.href = "YOUR_NEW_RESOURCE";
+      }
+    } );
   }
 </script>
 ```
