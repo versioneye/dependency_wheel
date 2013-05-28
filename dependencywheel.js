@@ -4,11 +4,14 @@
     License: MIT
     Author: Robert Reiz (VersionEye GmbH)
 
-    This is a fork from the MooWheel Class version 0.2 from unwieldy studios. 
+    This is a fork from the MooWheel Class version 0.2 from unwieldy studios.
     Written by Augusto Becciu (http://www.tweetwheel.com)
-   
-    This fork is customized to visualize dependencies for software libraries. 
+
+    This fork is customized to visualize dependencies for software libraries.
     It is used on https://www.versioneye.com
+
+    You will find source code and documentation on GitHub:
+    https://github.com/versioneye/dependency_wheel
 */
 
 var DependencyWheel = new Class({
@@ -32,19 +35,19 @@ var DependencyWheel = new Class({
          lineWidth: 6
       },
       onItemClick: $empty,
-      infoBox: 'mooinfo', 
-      infoNumber: 'moonumber', 
-      scope: "compile", 
+      infoBox: 'mooinfo',
+      infoNumber: 'moonumber',
+      scope: "compile",
       data_border: 70,
-      canvas_id: 'canvas', 
-      canvas_hover_id: 'canvas_hover',       
-      show_label: false, 
+      canvas_id: 'canvas',
+      canvas_hover_id: 'canvas_hover',
+      show_label: false,
       resize: false,
-      resize_ids: "container,section", 
-      resize_factor: 11, 
+      resize_ids: "container,section",
+      resize_factor: 11,
       container_id: "canvas-container"
     },
-   
+
     initialize: function(data, ct, options) {
       this.data = data;
       data_length = data.length;
@@ -63,7 +66,7 @@ var DependencyWheel = new Class({
         show_info_box(data, options);
         return false;
       }
-      
+
       // calculate canvas height/width if necessary
       var hw;
       if (!(this.options.width && this.options.height)) {
@@ -74,8 +77,8 @@ var DependencyWheel = new Class({
         }
         hw = 2 * ((this.radius + (length * 8)) + this.options.imageSize[0]) + 12;
       }
-      
-      ct.empty();      
+
+      ct.empty();
       ct = $(ct);
       var canvas = new Element('canvas', {
         width:  (this.options.width ? this.options.width : hw) + 'px',
@@ -83,7 +86,7 @@ var DependencyWheel = new Class({
         id: this.options.canvas_id
       });
       ct.adopt(canvas);
-      
+
       if ( typeof (G_vmlCanvasManager) != 'undefined') {
         canvas = $(G_vmlCanvasManager.initElement(canvas));
       }
@@ -94,9 +97,9 @@ var DependencyWheel = new Class({
       this.maxCount = 1;
 
       var canvasPos = this.canvas.getCoordinates();
-      
+
       this.options.center = {x: canvasPos.width / 2, y: canvasPos.height / 2};
- 
+
       CanvasTextFunctions.enable(this.cx);
 
       if (data_length == 0){
@@ -106,7 +109,7 @@ var DependencyWheel = new Class({
         show_info_box(this.data, this.options);
         return ;
       }
-            
+
       if(this.options.hover) {
          this.hoverCanvas = new Element('canvas', {
             'styles': {
@@ -119,45 +122,45 @@ var DependencyWheel = new Class({
             width: canvasPos.width + 'px',
             height: canvasPos.height + 'px'
          });
-        
+
          this.hoverCanvas.injectAfter(this.canvas);
 
          window.addEvent('resize', function() {
             var canvasPos = this.canvas.getCoordinates();
-            
+
             this.hoverCanvas.setStyles({left: canvasPos.left + 'px', top: canvasPos.top + 'px'});
             this.hoverCanvas.width = canvasPos.width;
             this.hoverCanvas.height = canvasPos.height;
          }.bind(this));
-  
+
          if (typeof(G_vmlCanvasManager) != 'undefined') {
              this.hoverCanvas = $(G_vmlCanvasManager.initElement(this.hoverCanvas));
          }
       }
-      
+
       this.data.each(function(item) {
         item['connections'].each(function(subitem) {
             if ($type(subitem) == 'array' && subitem[1] > this.maxCount)
               this.maxCount = subitem[1];
         }, this);
       }, this);
-         
+
       this.draw();
     },
-   
+
    // define each point on the wheel, including it's position and color
    setPoints: function() {
       this.points = {};
       this.bboxes = [];
-      
+
       this.numDegrees = (360 / this.data.length);
-      
+
       for (var i = 0, j = 0; j < this.data.length; i += this.numDegrees, j++) {
          if (this.data[j]['colors']) continue;
 
          var item = this.data[j];
          var color = {};
-         
+
          if (this.options.lines.color == 'random'){
             p1 = 100;
             p2 = 100;
@@ -228,7 +231,7 @@ var DependencyWheel = new Class({
           return false;
         else if (i > 270 && i < 360 && (x-px) < 0 && (y-py) > 0)
           return false;
-              
+
 
         var d = Math.sqrt(Math.pow((x-px),2) + Math.pow((y-py),2));
         var d3 = dr3(x,y), d4 = dr4(x,y);
@@ -239,27 +242,27 @@ var DependencyWheel = new Class({
         return false;
       };
    },
-   
+
    // draw the points onto the canvas
    drawPoints: function() {
       for(var i = 0, j = 0; j < this.data.length; i += this.numDegrees, j++) {
             this.cx.beginPath();
             this.cx.fillStyle = this.cx.strokeStyle = this.data[j]['colors']['__default'];
-            
+
             // solve for the dot location on the large circle
             var x = this.options.center.x + Math.cos(i * (Math.PI / 180)) * this.radius;
             var y = this.options.center.y + Math.sin(i * (Math.PI / 180)) * this.radius;
-                                 
+
             // draw the colored dot
             this.cx.arc(x, y, 4, 0, Math.PI * 2, 0);
             this.cx.fill();
             this.cx.closePath();
-          
-            this.calcbbox(x, y, i, j); 
+
+            this.calcbbox(x, y, i, j);
 
             if(!this.points[this.pc(x)])
                this.points[this.pc(x)] = {};
-               
+
             this.points[this.pc(x)][this.pc(y)] = j;
 
             // draw the text
@@ -291,17 +294,17 @@ var DependencyWheel = new Class({
    getAngle: function(idx) {
      return idx * (360 / this.data.length);
    },
-   
+
    getItemIdxById: function(id) {
      if($type(id) == 'array') id = id[0];
-     
+
      for (var i = 0, l = this.data.length; i < l; i++)
       if (this.data[i]['id'] == id)
          return i;
-  
+
      return -1;
    },
-   
+
    // draw the connection lines for a particular item
    drawConnection: function(i, hover) {
       if (hover){
@@ -312,11 +315,11 @@ var DependencyWheel = new Class({
       var item = this.data[i];
       var connections = item['connections'];
       var angle = this.getAngle(i);
-      
+
       // solve for the line starting point location on the large circle
       var x = this.options.center.x + Math.cos(angle * (Math.PI / 180)) * this.radius;
       var y = this.options.center.y + Math.sin(angle * (Math.PI / 180)) * this.radius;
-      
+
       cx.lineWidth = hover ? this.options.hoverLines.lineWidth : 2;
 
       // draw the bezier curve
@@ -361,11 +364,11 @@ var DependencyWheel = new Class({
          cx.stroke();
          cx.closePath();
       }
-      
+
       if (hover) {
         return;
       }
-      
+
       if (this.data[i+1]) {
          var self = this;
          setTimeout(function() { self.drawConnection(i+1); }, 25);
@@ -409,7 +412,7 @@ var DependencyWheel = new Class({
 
         return grad;
     },
-   
+
    // draw the entire DependencyWheel
    draw: function() {
       if (this.data) {
@@ -420,10 +423,10 @@ var DependencyWheel = new Class({
       if (this.options.hover) {
          $(this.hoverCanvas).addEvent('mousemove', function(e) {
             e = new Event(e);
-            
+
             var pos = $(this.hoverCanvas).getCoordinates();
-           
-            // convert page coordinates to canvas coordinates 
+
+            // convert page coordinates to canvas coordinates
             var mpos = {x: (e.page.x - pos.left),
                         y: (e.page.y - pos.top)};
 
@@ -442,7 +445,7 @@ var DependencyWheel = new Class({
                return false;
 
             }.bind(this);
-            
+
             var conn = test(mpos);
             if(conn !== false) {
                if(this.lastMouseOver == conn)
@@ -458,10 +461,10 @@ var DependencyWheel = new Class({
                var cx = this.hoverCanvas.getContext('2d');
                cx.clearRect(0, 0, pos.width, pos.height);
                cx.save();
-   
+
                this.lastMouseOver = null;
-               
-               this.canvas.setStyle('opacity', '1.0'); 
+
+               this.canvas.setStyle('opacity', '1.0');
                this.hoverCanvas.setStyle('cursor', 'default');
             }
          }.bind(this));
@@ -472,21 +475,21 @@ var DependencyWheel = new Class({
          }.bind(this));
       }
    },
-   
+
    // get the brightness/color of a particular line when heat/cold maps are used
    getTemperature: function(type, percent) {
       if(type == 'heat') {
          var p = {r: percent / 0.33, y: (percent - 0.33) / 0.33, w: (percent - 0.66) / 0.66};
-   
+
          var r = Math.round(p.r * 255 > 255 ? 255 : p.r * 255);
          var y = Math.round(p.y * 255 > 255 ? 255 : p.y * 255);
          var w = Math.round(p.w * 255 > 255 ? 255 : p.w * 255);
-         
+
          return 'rgba(' + (r < 0 ? 0 : r) + ',' + (y < 0 ? 0 : y) + ',' + (w < 0 ? 0 : w) + ', ' + (percent * 0.8 + 0.2) + ')';
-      } else if(type == 'cold') {         
+      } else if(type == 'cold') {
          var r = Math.round(percent * 255);
          var g = Math.round(130 + (percent * 125));
-         
+
          return 'rgba(' + r + ',' + g + ',255, ' + (percent * 0.8 + 0.2) + ')';
       }
    }
@@ -495,13 +498,13 @@ DependencyWheel.implement(new Options);
 
 // helper class for AJAX/JSON-based wheel information retrieval
 DependencyWheel.Remote = new Class({
-    
+
     Extends: DependencyWheel,
 
     initialize: function(data, ct, options) {
         var preloadImages = function(wheelData) {
             var imageUrls = [], map = {};
-            
+
             if (!wheelData){
               return false;
             }
@@ -519,7 +522,7 @@ DependencyWheel.Remote = new Class({
                 }
               }
             }
-            
+
             for (var i = 0, l = wheelData.length; i < l; i++) {
                 if (wheelData[i]['imageUrl']) {
                     imageUrls.push(wheelData[i]['imageUrl']);
@@ -538,7 +541,7 @@ DependencyWheel.Remote = new Class({
 
                     // hack to make this.parent work within callback
                     arguments.callee._parent_ = this.initialize._parent_;
-                    
+
                     this.parent(wheelData, ct, options);
                 }.bind(this)
             });
@@ -563,7 +566,7 @@ DependencyWheel.Remote = new Class({
 
                   if (!preloadImages(data, ct, options))
                       this.parent(data, ct, options);
-              
+
               }.bind(this)
             }).send();
         } else if (!preloadImages(data, ct, options)) {
@@ -577,7 +580,7 @@ function show_info_box(data, options){
   number_name = options.infoNumber;
   recursive_deps = data.length;
   options.data_length = data.length;
-  
+
   info_box = document.getElementById(box_name);
   if (info_box){
     info_box.style.display = "inline-block";
@@ -591,12 +594,12 @@ function show_info_box(data, options){
   scope_name = document.getElementById("scope_name");
   if (scope_name){
     if (options.scope == "all"){
-      scope_name.innerHTML = "";  
+      scope_name.innerHTML = "";
     } else {
-      scope_name.innerHTML = options.scope;  
+      scope_name.innerHTML = options.scope;
     }
   }
   if (typeof(handle_path) == 'function'){
-    handle_path(options);  
+    handle_path(options);
   }
 }
