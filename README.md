@@ -16,7 +16,7 @@ Some of the dependency wheels created at VersionEye are on [Pinterest.com](http:
 
 Code Example
 ==
-It is very to use the library. All you need is HTML div.
+It is very easy to use the library. All you need is HTML div.
 
 ```html
 <div id="canvas-container"></div>
@@ -34,15 +34,8 @@ And a little bit JavaScript.
         width: "605",
         height: "605",
         infoBox: "infoBox",
-
-        infoNumber: "runtime_recursive_number",
         canvas_id: "canvas",
         canvas_hover_id: "canvas_hover",
-        data_border: 70,
-        show_label: false,
-        resize: false,
-        scope: "SCOPE",
-        container_id: "canvas-container",
         onItemClick: function(item, event){
           window.location.href = "YOUR_NEW_RESOURCE";
         }
@@ -60,9 +53,12 @@ The server resource has to deliver a JSON string with this structure:
     connections: [
       "id_to_another_node_1"
       "id_to_another_node_1"
-      ]
-    text: "Label text of this node"
-    id: "id_of_this_node"
+      ],
+    dependencies: [
+      "id_to_another_node_1"
+    ],
+    text: "Label text of this node",
+    id: "id_of_this_node",
     version: "version string"
   }
 ]
@@ -73,15 +69,16 @@ Here is a short example:
 ```JSON
 [
   {
-    connections: [ "node_2" ]
-    text: "node_1"
-    id: "node_1"
+    connections: [ "node_2" ],
+    dependencies:[ "node_2" ],
+    text: "node_1",
+    id: "node_1",
     version: "1.0.0"
   },
   {
-    connections: [ "node_1" ]
-    text: "node_2"
-    id: "node_2"
+    connections: [ "node_1" ],
+    text: "node_2",
+    id: "node_2",
     version: "1.0.0"
   }
 ]
