@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>DependencyWheel example</title>
+	<script src="../mootools-1.2-core-nc.js"></script>
+	<script src="../mootools-1.2-more.js"></script>
+	<script src="../excanvas.js"></script>
+	<script src="../canvastext.js"></script>
+
+	<script src="../dependencywheel.js"></script>
+
+	<script>
+		var renderWheel = function() {
+			var canvasContainer = document.getElementById('canvas-container');
+			if (canvasContainer) {
+				var wheel = new DependencyWheel.Remote(false, canvasContainer, {
+					url: './data.json',
+					width: '605',
+					height: '605',
+					infoBox: 'infoBox',
+					infoNumber: 'runtime_recursive_number',
+					canvas_id: 'canvas',
+					canvas_hover_id: 'canvas_hover',
+					data_border: 70,
+					show_label: false,
+					resize: false,
+					scope: 'SCOPE',
+					container_id: 'canvas-container',
+					onItemClick: function(item, event){
+						window.location.href = "YOUR_NEW_RESOURCE";
+					}
+				} );
+			}
+		};
+	</script>
+</head>
+<body onload="renderWheel();">
+	<div id="canvas-container"></div>
+</body>
+</html>
