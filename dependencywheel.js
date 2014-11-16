@@ -2,7 +2,7 @@
     Class: DependencyWheel
     Version: 0.1
     License: MIT
-    Author: Robert Reiz (VersionEye GmbH)
+    Author: Robert Reiz (VersionEye GmbH), Göran Bodenschatz
 
     This is a fork from the MooWheel Class version 0.2 from unwieldy studios.
     Written by Augusto Becciu (http://www.tweetwheel.com)
@@ -50,18 +50,18 @@ var DependencyWheel = new Class({
 
     initialize: function(data, ct, options) {
       this.data = data;
-      data_length = data.length;
+      var data_length = data.length;
       this.radius = Math.round(this.options.radialMultiplier * data_length);
       this.setOptions(options);
 
       if (data_length < 3){
-        options.height = "77";
-        this.options.height = "77";
+        options.height = 77;
+        this.options.height = 77;
         options.show_label = false;
         this.options.show_label = false;
       }
 
-      border = this.options.data_border;
+      var border = this.options.data_border;
       if (data_length > border && this.options.resize == false ){
         show_info_box(data, options);
         return false;
@@ -336,12 +336,12 @@ var DependencyWheel = new Class({
 
          cx.beginPath();
          cx.moveTo(x, y);
-         rpos = this.getAngle(itemIdx);
-         x2 = this.options.center.x + Math.cos(rpos * (Math.PI / 180)) * this.radius;
-         y2 = this.options.center.y + Math.sin(rpos * (Math.PI / 180)) * this.radius;
-         cp1x = this.options.center.x + Math.cos(angle * (Math.PI / 180)) * (this.radius / 1.5);
-         cp1y = this.options.center.y + Math.sin(angle * (Math.PI / 180)) * (this.radius / 1.5);
-         cp2x = this.options.center.x + Math.cos(rpos * (Math.PI / 180)) * (this.radius / 1.5);
+         var rpos = this.getAngle(itemIdx ),
+         x2 = this.options.center.x + Math.cos(rpos * (Math.PI / 180)) * this.radius,
+         y2 = this.options.center.y + Math.sin(rpos * (Math.PI / 180)) * this.radius,
+         cp1x = this.options.center.x + Math.cos(angle * (Math.PI / 180)) * (this.radius / 1.5),
+         cp1y = this.options.center.y + Math.sin(angle * (Math.PI / 180)) * (this.radius / 1.5),
+         cp2x = this.options.center.x + Math.cos(rpos * (Math.PI / 180)) * (this.radius / 1.5),
          cp2y = this.options.center.y + Math.sin(rpos * (Math.PI / 180)) * (this.radius / 1.5);
 
           var stopItem = this.data[ itemIdx ];
@@ -509,14 +509,14 @@ DependencyWheel.Remote = new Class({
               return false;
             }
 
-            border = options.data_border;
+            var border = options.data_border;
             if (wheelData.length > border && options.resize == true){
               options.width = wheelData.length * options.resize_factor;
               options.height = wheelData.length * options.resize_factor;
-              element_ids = options.resize_ids.split(",");
-              for (element_count = 0; element_count < element_ids.length; element_count++){
-                element = document.getElementById(element_ids[element_count]);
-                new_width = options.width + (element_count * 20);
+              var element_ids = options.resize_ids.split(",");
+              for (var element_count = 0; element_count < element_ids.length; element_count++){
+                var element = document.getElementById(element_ids[element_count]);
+                var new_width = options.width + (element_count * 20);
                 if (element.offsetWidth < new_width){
                   element.style.width = new_width + "px";
                 }
@@ -576,30 +576,35 @@ DependencyWheel.Remote = new Class({
 });
 
 function show_info_box(data, options){
-  box_name = options.infoBox;
-  number_name = options.infoNumber;
-  recursive_deps = data.length;
-  options.data_length = data.length;
+	var box_name = options.infoBox,
+		number_name = options.infoNumber,
+		recursive_deps = data.length,
+		info_box = document.getElementById(box_name ),
+		info_number = document.getElementById(number_name ),
+		scope_name = document.getElementById("scope_name");;
 
-  info_box = document.getElementById(box_name);
-  if (info_box){
-    info_box.style.display = "inline-block";
-  }
+    options.data_length = data.length;
 
-  info_number = document.getElementById(number_name);
-  if (info_number){
-    info_number.innerHTML = recursive_deps;
-  }
+    info_box = document.getElementById(box_name);
 
-  scope_name = document.getElementById("scope_name");
-  if (scope_name){
-    if (options.scope == "all"){
-      scope_name.innerHTML = "";
-    } else {
-      scope_name.innerHTML = options.scope;
+    if (info_box){
+      info_box.style.display = "inline-block";
     }
-  }
-  if (typeof(handle_path) == 'function'){
-    handle_path(options);
-  }
+
+
+    if (info_number){
+      info_number.innerHTML = recursive_deps;
+    }
+
+
+    if (scope_name){
+      if (options.scope == "all"){
+        scope_name.innerHTML = "";
+      } else {
+        scope_name.innerHTML = options.scope;
+      }
+    }
+    if (typeof(handle_path) == 'function'){
+      handle_path(options);
+    }
 }
